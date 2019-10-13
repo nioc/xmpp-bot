@@ -1,0 +1,16 @@
+[Unit]
+Description=XMPP Bot
+Documentation=https://github.com/nioc/xmpp-bot
+After=network.target
+
+[Service]
+User=xmpp-bot
+WorkingDirectory=/usr/local/bin/xmpp-bot/
+ExecStart=/usr/bin/node /usr/local/bin/xmpp-bot/server.js
+Restart=on-failure
+RestartSec=1000ms
+Environment=NODE_ENV=production
+SyslogIdentifier=xmpp-bot
+
+[Install]
+WantedBy=multi-user.target

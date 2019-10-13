@@ -1,0 +1,98 @@
+{
+    "logger": {
+        "level": "debug",
+        "file": {
+            "active": true,
+            "pattern": "%d %p %m",
+            "path": "./",
+            "filename": "xmpp-bot.log"
+        },
+        "console": {
+            "active": false,
+            "coloured": true
+        },
+        "stdout": {
+            "active": false,
+            "pattern": "%p %m"
+        }
+    },
+    "webhooksListener": {
+        "path": "/webhooks",
+        "port": 8000,
+        "ssl": {
+            "port": null,
+            "certPath": "/etc/ssl/certs/ssl-cert-snakeoil.pem",
+            "keyPath": "/etc/ssl/private/ssl-cert-snakeoil.key"
+        },
+        "users": [
+            {
+                "login": "login1",
+                "password": "1pass"
+            },
+            {
+                "login": "login2",
+                "password": "2pass"
+            }
+        ],
+        "accessLog": {
+            "active": true,
+            "path": "./",
+            "filename": "webhook.log"
+        }
+    },
+    "xmppServer": {
+        "host": "domain-xmpp.ltd",
+        "port": 5222,
+        "jid": "bot@domain-xmpp.ltd",
+        "password": "botPass",
+        "rooms": [
+            {
+                "id": "roomname@conference.domain-xmpp.ltd",
+                "password": null
+            }
+        ]
+    },
+    "incomingWebhooks": [
+        {
+            "path": "/webhooks/w1",
+            "action": "send_xmpp_message"
+        },
+        {
+            "path": "/webhooks/grafana",
+            "action": "send_xmpp_template",
+            "args": {
+                "destination": "grafana@conference.domain-xmpp.ltd",
+                "sendToGroup": true
+            },
+            "template": "${title}\r\n${message}\r\n${evalMatches[].metric}: ${evalMatches[].value}\r\n${imageUrl}"
+        },
+        {
+            "path": "/webhooks/dummy",
+            "action": "dummy"
+        }
+    ],
+    "xmppHooks": [
+        {
+            "room": "bot",
+            "action": "outgoing_webhook",
+            "args": ["w1"]
+        },
+        {
+            "room": "roomname@conference.domain-xmpp.ltd",
+            "action": "outgoing_webhook",
+            "args": ["w1"]
+        }
+    ],
+    "outgoingWebhooks": [
+        {
+            "code": "w1",
+            "url": "https://domain.ltd:port/path/resource?parameter1=value1",
+            "strictSSL": true,
+            "contentType": "application/json",
+            "authMethod": "basic",
+            "user": "user3",
+            "password": "3pass",
+            "bearer": null
+        }
+    ]
+}
