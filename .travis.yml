@@ -8,3 +8,7 @@ node_js:
 
 before_script:
   - cp test/config.json config.json
+
+script:
+  - npm run lint
+  - npm test

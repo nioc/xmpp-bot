@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "NODE_ENV=production node server.js",
+    "lint": "eslint .",
     "test": "mocha"
   },
   "author": "nioc <dev@nioc.eu>",
