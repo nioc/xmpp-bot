@@ -4,7 +4,7 @@ process.env.NODE_ENV = 'production'
 // eslint-disable-next-line no-unused-vars
 const should = require('chai').should()
 let request = require('request')
-let server = require('../server')
+let server = require('../lib/server')
 const baseUrl = 'http://localhost:8000/'
 
 after((done) => {

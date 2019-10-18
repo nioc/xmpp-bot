@@ -2,10 +2,10 @@
   "name": "xmpp-bot",
   "version": "1.0.0",
   "description": "XMPP bot",
-  "main": "server.js",
+  "main": "./lib/server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "NODE_ENV=production node server.js",
+    "dev": "nodemon lib/server.js",
+    "start": "NODE_ENV=production node lib/server.js",
     "lint": "eslint .",
     "test": "mocha",
     "cover": "nyc --reporter=html --reporter=text mocha"

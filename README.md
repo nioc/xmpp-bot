@@ -40,10 +40,10 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 -   Create run user (optionnal):
     ```
     useradd -r -s /bin/false xmpp-bot
-    chown xmpp-bot:xmpp-bot /usr/local/bin/xmpp-bot -R
+    chown xmpp-bot:xmpp-bot /usr/local/bin/xmpp-bot/lib -R
     ```
 
--   Set [configuration](#configuration) in `config.json` (you can copy `config.json.dist`)
+-   Set [configuration](#configuration) in `/lib/config/config.json` (you can copy `config.json.dist`)
 
 -   Add systemd service from [model](/docs/xmpp-bot.service):
     ```shell
