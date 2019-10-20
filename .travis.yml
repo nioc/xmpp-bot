@@ -7,7 +7,7 @@ node_js:
   - lts/*
 
 before_script:
-  - cp test/config.json config.json
+  - cp test/config.json lib/config/config.json
 
 script:
   - npm run lint

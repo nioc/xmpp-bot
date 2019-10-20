@@ -1,3 +1,4 @@
+'use strict'
 process.env.NODE_ENV = 'production'
 
 const should = require('chai').should()
@@ -5,32 +6,43 @@ const sinon = require('sinon')
 const EventEmitter = require('events').EventEmitter
 const mock = require('mock-require')
 
-// create default logger
-let logger = require('./../lib/logger')()
-
-// get configuration
-let config = require('./../lib/config')(logger, './test/config.json')
-
-// update logger with configuration
-logger.updateConfig(config.logger)
-
-// mock simple-xmpp module
-const simpleXmppEvents = new EventEmitter()
-let xmppJoinStub = sinon.stub()
-mock('simple-xmpp', {
-  connect: () => {},
-  join: xmppJoinStub,
-  on: (eventName, callback) => {
-    simpleXmppEvents.on(eventName, callback)
-  },
-  getRoster: () => {}
-})
-
-// mock outgoing
-let outgoingStub = sinon.stub()
-mock('./../lib/outgoing', outgoingStub)
-
 describe('XMPP component', () => {
+  const simpleXmppEvents = new EventEmitter()
+  let logger, config, outgoingStub, xmppJoinStub
+
+  before('Setup', (done) => {
+    // create default logger
+    logger = require('./../lib/logger')()
+
+    // get configuration
+    config = require('./../lib/config')(logger, './test/config.json')
+
+    // update logger with configuration
+    logger.updateConfig(config.logger)
+
+    // mock simple-xmpp module
+    xmppJoinStub = sinon.stub()
+    mock('simple-xmpp', {
+      connect: () => {},
+      join: xmppJoinStub,
+      on: (eventName, callback) => {
+        simpleXmppEvents.on(eventName, callback)
+      },
+      getRoster: () => {}
+    })
+
+    // mock outgoing
+    outgoingStub = sinon.stub()
+    mock('./../lib/outgoing', outgoingStub)
+
+    done()
+  })
+
+  after('Remove mocks', (done) => {
+    mock.stopAll()
+    done()
+  })
+
   beforeEach('Reset outgoing stub history', function () {
     outgoingStub.resetHistory()
   })
