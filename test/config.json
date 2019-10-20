@@ -1,6 +1,6 @@
 {
     "logger": {
-        "level": "debug",
+        "level": "error",
         "file": {
             "active": true,
             "pattern": "%d %p %m",
