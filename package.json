@@ -8,7 +8,8 @@
     "start": "NODE_ENV=production node lib/server.js",
     "lint": "eslint .",
     "test": "mocha",
-    "cover": "nyc --reporter=html --reporter=text mocha"
+    "cover": "nyc --reporter=html --reporter=text mocha",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "author": "nioc <dev@nioc.eu>",
   "license": "AGPL-3.0-or-later",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "coveralls": "^3.0.7",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.18.2",
