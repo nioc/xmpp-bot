@@ -123,7 +123,13 @@ describe('XMPP component', () => {
   })
 
   describe('XMPP server send an error', () => {
-    it('Should log error only', (done) => {
+    before(() => {
+      sinon.stub(process, 'exit')
+    })
+    after(() => {
+      process.exit.restore()
+    })
+    it('Should log error and exit with 99 code', (done) => {
       let error = 'This the error text'
       simpleXmppEvents.emit('error', error)
       require('fs').readFile(config.logger.file.path + config.logger.file.filename, 'utf8', (err, data) => {
@@ -131,6 +137,7 @@ describe('XMPP component', () => {
           throw err
         }
         data.should.match(new RegExp(error + '\n$'))
+        sinon.assert.calledWith(process.exit, 99)
         done()
       })
     })
