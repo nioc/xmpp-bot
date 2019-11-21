@@ -12,9 +12,10 @@ describe('Server', () => {
     xmppStub = sinon.stub()
     webhookStub = sinon.stub()
     mock('./../lib/xmpp', () => {
-      let xmpp = {}
+      this.send = () => {}
+      this.close = () => {}
       xmppStub()
-      return xmpp
+      return this
     })
 
     // mock webhook component

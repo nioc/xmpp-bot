@@ -54,7 +54,7 @@ describe('Outgoing webhook component', () => {
 
   describe('Unkwnow outgoing webhook', () => {
     it('Should not execute request', (done) => {
-      Outgoing(logger, config, xmpp, 'user', 'destination', 'message', true, 'code', (error, response, body) => {
+      Outgoing(logger, config, xmpp, 'user', 'destination', 'message', 'type', 'code', (error, response, body) => {
         should.not.equal(error, null)
         sinon.assert.notCalled(reqSpy)
         done()
@@ -64,7 +64,7 @@ describe('Outgoing webhook component', () => {
 
   describe('POST with basic authorization and JSON content-type and reply message to XMPP', () => {
     it('Should send basic authentication and JSON content-type in header and send an XMPP message', (done) => {
-      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a first message', true, 'w1', (error, response, body) => {
+      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a first message', 'type', 'w1', (error, response, body) => {
         should.equal(error, null)
         sinon.assert.calledOnce(reqSpy)
         const req = reqSpy.args[0][0]
@@ -78,7 +78,7 @@ describe('Outgoing webhook component', () => {
         const xmppSendArgs = xmppSendStub.args[0]
         xmppSendArgs[0].should.equal('destination')
         xmppSendArgs[1].should.equal('This is a reply')
-        xmppSendArgs[2].should.equal(true)
+        xmppSendArgs[2].should.equal('type')
         done()
       })
     })
@@ -86,7 +86,7 @@ describe('Outgoing webhook component', () => {
 
   describe('POST with bearer authorization and JSON content-type', () => {
     it('Should send basic authentication in header', (done) => {
-      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', true, 'w2', (error, response, body) => {
+      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', 'type', 'w2', (error, response, body) => {
         should.equal(error, null)
         sinon.assert.calledOnce(reqSpy)
         const req = reqSpy.args[0][0]
@@ -101,7 +101,7 @@ describe('Outgoing webhook component', () => {
 
   describe('POST without authorization', () => {
     it('Should not send authorization in header and handle 401', (done) => {
-      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', true, 'w3', (error, response, body) => {
+      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', 'type', 'w3', (error, response, body) => {
         should.not.equal(error, null)
         sinon.assert.calledOnce(reqSpy)
         done()
@@ -111,7 +111,7 @@ describe('Outgoing webhook component', () => {
 
   describe('POST with HTTP error', () => {
     it('Should handle error', (done) => {
-      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', true, 'w4', (error, response, body) => {
+      Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', 'type', 'w4', (error, response, body) => {
         should.not.equal(error, null)
         sinon.assert.calledOnce(reqSpy)
         done()

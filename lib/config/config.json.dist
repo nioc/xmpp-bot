@@ -41,9 +41,9 @@
         }
     },
     "xmppServer": {
-        "host": "domain-xmpp.ltd",
-        "port": 5222,
-        "jid": "bot@domain-xmpp.ltd",
+        "service": "xmpps://domain-xmpp.ltd:5223",
+        "domain": "domain-xmpp.ltd",
+        "username": "bot@domain-xmpp.ltd",
         "password": "botPass",
         "rooms": [
             {
@@ -62,14 +62,14 @@
             "action": "send_xmpp_template",
             "args": {
                 "destination": "grafana@conference.domain-xmpp.ltd",
-                "sendToGroup": true
+                "type": "groupchat"
             },
             "template": "${title}\r\n${message}\r\n${evalMatches[].metric}: ${evalMatches[].value}\r\n${imageUrl}"
         }
     ],
     "xmppHooks": [
         {
-            "room": "bot",
+            "room": "bot@domain-xmpp.ltd",
             "action": "outgoing_webhook",
             "args": ["w1"]
         },

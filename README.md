@@ -12,7 +12,6 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 ## Key features
 
 -   Call outgoing webhook on XMPP incoming messages from user chat or group chat (Multi-user chat "MUC"),
-
 -   Send message templates (with values to apply to variables in that template) to user or room (MUC) on incoming authorized (basic or bearer) webhook.
 
 ## Installation
@@ -86,29 +85,24 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 ### Logger
 
 -    `level` log4js level (all < trace < debug < info < warn < error < fatal < mark < off)
-
 -    `file`, `console` and `stdout` define log appenders (see [log4js doc](https://log4js-node.github.io/log4js-node/appenders.html))
 
 ### Webhooks listener
 
 -    `path` and `port` define the listening endpoint
-
 -    `ssl` define key and certificat location and port used for exposing in https, make sure that user of the process is allowed to read cert
-
 -    `users` is an array of user/password for basic authentication
-
 -    `accessLog` define the listener logger
 
 ### XMPP Server
 
--    `host` and `port` define XMPP server
--    `jid` and `password` define XMPP "bot" user credentials
+-    `service` and `domain` define XMPP server
+-    `username` and `password` define XMPP "bot" user credentials
 -    `rooms` list rooms (and optionnal password) where bot will listen
 
 ### Incoming webhooks (list)
 
 -    `path` is the webhook key:a POST request on this path will trigger corresponding `action`
-
 -    `action` among enumeration:
      -    `send_xmpp_message` will send message (`message` in request body) to `destination` (from request body) ; if `destination` is found in `config.xmppServer.rooms` array, message will send as a groupchat). Request exemple:
 
@@ -125,12 +119,11 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
             }
             ```
 
-     -    `send_xmpp_template` will send template with merged variables (using JMESPath) to `destination` (user or room if `sendToGroup` set to true)
+     -    `send_xmpp_template` will send template with merged variables (using JMESPath) to `destination` (user or room if `type` set to `chat` or `groupchat`)
 
 ### XMPP hooks (list)
 
 -    `room` is the XMPP hook key: an incoming groupchat (or chat) from this room (or this user) will trigger corresponding `action`
-
 -    `action` among enumeration:
      -    `outgoing_webhook` will execute a request to corresponding webhook with `args` as webhook code
 
