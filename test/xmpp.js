@@ -9,7 +9,7 @@ const jid = require('@xmpp/jid')
 
 describe('XMPP component', () => {
   const simpleXmppEvents = new EventEmitter()
-  let logger, config, outgoingStub, xmppSendStub
+  let logger, config, outgoingStub, xmppSendStub, xmppCloseStub
 
   before('Setup', (done) => {
     // create default logger
@@ -23,10 +23,11 @@ describe('XMPP component', () => {
 
     // mock @xmpp/client module
     xmppSendStub = sinon.stub().resolves()
+    xmppCloseStub = sinon.stub().resolves()
     mock('@xmpp/client', {
       client: () => {
         this.start = async () => {}
-        this.stop = async () => {}
+        this.stop = xmppCloseStub
         this.send = xmppSendStub
         this.on = (eventName, callback) => {
           simpleXmppEvents.on(eventName, callback)
@@ -41,16 +42,22 @@ describe('XMPP component', () => {
     outgoingStub = sinon.stub()
     mock('./../lib/outgoing', outgoingStub)
 
+    // mock logger trace
+    sinon.stub(logger, 'trace')
+
     done()
   })
 
   after('Remove mocks', (done) => {
     mock.stopAll()
+    logger.trace.restore()
     done()
   })
 
-  beforeEach('Reset outgoing stub history', function () {
+  beforeEach('Reset outgoing and xmpp stub history', function () {
     outgoingStub.resetHistory()
+    xmppSendStub.resetHistory()
+    xmppCloseStub.resetHistory()
   })
 
   describe('Connect to XMPP server', () => {
@@ -77,6 +84,38 @@ describe('XMPP component', () => {
         )
         args[0].should.deep.equal(stanza)
       }
+      done()
+    })
+    it('Should trace connection status', (done) => {
+      simpleXmppEvents.emit('status', 'connecting')
+      sinon.assert.calledWith(logger.trace, 'Status changed to connecting')
+      done()
+    })
+  })
+
+  describe('Bot receive a presence stanza from someone', () => {
+    it('Should not trigger outgoing webhook', (done) => {
+      simpleXmppEvents.emit('stanza', xml(
+        'presence', {
+          from: 'someone@domain-xmpp.ltd',
+          to: 'bot@domain-xmpp.ltd'
+        }
+      ))
+      sinon.assert.notCalled(outgoingStub)
+      done()
+    })
+  })
+
+  describe('Bot receive an empty message from someone', () => {
+    it('Should not trigger outgoing webhook', (done) => {
+      simpleXmppEvents.emit('stanza', xml(
+        'message', {
+          from: 'someone@domain-xmpp.ltd',
+          to: 'bot@domain-xmpp.ltd',
+          type: 'chat'
+        }
+      ))
+      sinon.assert.notCalled(outgoingStub)
       done()
     })
   })
@@ -188,6 +227,37 @@ describe('XMPP component', () => {
       args[5].should.equal('This is the message text')
       args[6].should.equal('groupchat')
       args[7].should.equal('w1')
+      done()
+    })
+  })
+
+  describe('Send a message', () => {
+    it('Should call xmpp/client.send() with valid stanza', (done) => {
+      const xmpp = require('./../lib/xmpp')(logger, config)
+      xmpp.send('someone@domain-xmpp.ltd', 'This is the message text sent by bot', 'chat')
+      sinon.assert.calledOnce(xmppSendStub)
+      let stanza = xml(
+        'message', {
+          to: 'someone@domain-xmpp.ltd',
+          type: 'chat'
+        },
+        xml(
+          'body', {
+          },
+          'This is the message text sent by bot')
+      )
+      const args = xmppSendStub.args[0]
+      args.should.have.length(1)
+      args[0].should.deep.equal(stanza)
+      done()
+    })
+  })
+
+  describe('Close connection', () => {
+    it('Should call xmpp/client.stop()', (done) => {
+      const xmpp = require('./../lib/xmpp')(logger, config)
+      xmpp.close()
+      sinon.assert.calledOnce(xmppCloseStub)
       done()
     })
   })
