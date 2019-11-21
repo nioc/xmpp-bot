@@ -121,17 +121,22 @@ describe('XMPP component', () => {
   })
 
   describe('Bot receive a message from someone', () => {
-    it('Should trigger outgoing webhook with valid arguments', (done) => {
+    it('Should trigger outgoing webhook with valid arguments and send a message delivery receipt', (done) => {
       simpleXmppEvents.emit('stanza', xml(
         'message', {
           from: 'someone@domain-xmpp.ltd',
           to: 'bot@domain-xmpp.ltd',
-          type: 'chat'
+          type: 'chat',
+          id: 'fcdd3d8c'
         },
         xml(
           'body', {
           },
-          'This is the message text')
+          'This is the message text'),
+        xml(
+          'request', {
+            xmlns: 'urn:xmpp:receipts'
+          })
       ))
       sinon.assert.calledOnce(outgoingStub)
       const args = outgoingStub.args[0]
@@ -141,6 +146,19 @@ describe('XMPP component', () => {
       args[5].should.equal('This is the message text')
       args[6].should.equal('chat')
       args[7].should.equal('w1')
+      sinon.assert.calledOnce(xmppSendStub)
+      const receiptStanza = xml(
+        'message', {
+          to: 'someone@domain-xmpp.ltd'
+        },
+        xml(
+          'received', {
+            xmlns: 'urn:xmpp:receipts',
+            id: 'fcdd3d8c'
+          }
+        )
+      )
+      xmppSendStub.args[0][0].should.deep.equal(receiptStanza)
       done()
     })
   })
