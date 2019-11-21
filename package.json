@@ -1,6 +1,6 @@
 {
   "name": "xmpp-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "XMPP bot",
   "main": "./lib/server.js",
   "scripts": {
@@ -10,6 +10,9 @@
     "test": "mocha",
     "cover": "nyc --reporter=html --reporter=text mocha",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
   },
   "author": "nioc <dev@nioc.eu>",
   "license": "AGPL-3.0-or-later",
@@ -31,7 +34,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "coveralls": "^3.0.7",
+    "coveralls": "^3.0.8",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.18.2",

@@ -40,7 +40,7 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 -   Create run user (optionnal):
     ```
     useradd -r -s /bin/false xmpp-bot
-    chown xmpp-bot:xmpp-bot /usr/local/bin/xmpp-bot/lib -R
+    chown xmpp-bot:xmpp-bot /usr/local/bin/xmpp-bot -R
     ```
 
 -   Set [configuration](#configuration) in `/lib/config/config.json` (you can copy `config.json.dist`)
@@ -135,7 +135,7 @@ See also the list of [contributors](https://github.com/nioc/xmpp-bot/contributor
 
 This project is powered by the following components:
 
--   [node-simple-xmpp](https://github.com/simple-xmpp/node-simple-xmpp) (MIT)
+-   [xmpp.js](https://github.com/simple-xmpp/node-simple-xmpp) (ISC)
 -   [express](https://github.com/expressjs/express) (MIT)
 -   [body-parser](https://github.com/expressjs/body-parser) (MIT)
 -   [express-basic-auth](https://github.com/LionC/express-basic-auth) (MIT)
