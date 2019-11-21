@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 User=xmpp-bot
-WorkingDirectory=/usr/local/bin/xmpp-bot/lib/
+WorkingDirectory=/usr/local/bin/xmpp-bot/
 ExecStart=/usr/bin/node /usr/local/bin/xmpp-bot/lib/server.js
 Restart=on-failure
 RestartSec=1000ms

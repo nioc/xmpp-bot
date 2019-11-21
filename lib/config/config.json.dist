@@ -45,6 +45,7 @@
         "domain": "domain-xmpp.ltd",
         "username": "bot@domain-xmpp.ltd",
         "password": "botPass",
+        "resource": "botservice",
         "rooms": [
             {
                 "id": "roomname@conference.domain-xmpp.ltd",
