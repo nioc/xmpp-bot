@@ -124,6 +124,17 @@
             "user": null,
             "password": null,
             "bearer": null
+        },
+        {
+            "code": "timeout-error",
+            "url": "https://domain.ltd:port/path/timeout-error",
+            "timeout": 500,
+            "strictSSL": true,
+            "contentType": "application/json",
+            "authMethod": null,
+            "user": null,
+            "password": null,
+            "bearer": null
         }
     ]
 }

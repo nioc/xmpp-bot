@@ -84,6 +84,7 @@
         {
             "code": "w1",
             "url": "https://domain.ltd:port/path/resource?parameter1=value1",
+            "timeout": 500,
             "strictSSL": true,
             "contentType": "application/json",
             "authMethod": "basic",

@@ -8,7 +8,7 @@ const nock = require('nock')
 const Outgoing = require('./../lib/outgoing')
 
 describe('Outgoing webhook component', () => {
-  let logger, config, xmppSendStub, xmpp, scope, scopeUnauthorized, scopeWithError, reqSpy
+  let logger, config, xmppSendStub, xmpp, scope, scopeUnauthorized, scopeWithError, scopeWithTimeout, reqSpy
 
   before('Setup', () => {
     // create default logger
@@ -49,6 +49,12 @@ describe('Outgoing webhook component', () => {
       .post('/path/request-error')
       .replyWithError('error in request')
     scopeWithError.on('request', reqSpy)
+
+    scopeWithTimeout = nock('https://domain.ltd:port')
+      .post('/path/timeout-error')
+      .delay(1000)
+      .reply(200, { reply: 'This is a reply' })
+    scopeWithTimeout.on('request', reqSpy)
 
     done()
   })
@@ -127,6 +133,18 @@ describe('Outgoing webhook component', () => {
         should.fail(0, 1, 'Exception not thrown')
       } catch (error) {
         error.message.should.equal('error in request')
+      }
+      sinon.assert.calledOnce(reqSpy)
+    })
+  })
+
+  describe('POST with timeout', () => {
+    it('Should handle error and throw an exception', async () => {
+      try {
+        await Outgoing(logger, config, xmpp, 'user', 'destination', 'This a second message', 'type', 'timeout-error')
+        should.fail(0, 1, 'Exception not thrown')
+      } catch (error) {
+        error.message.should.equal('ESOCKETTIMEDOUT')
       }
       sinon.assert.calledOnce(reqSpy)
     })
