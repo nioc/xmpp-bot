@@ -21,11 +21,9 @@ describe('Webhook component', () => {
     logger.updateConfig(config.logger)
 
     // mock xmpp component
-    xmppSendStub = sinon.stub()
     xmpp = {
-      send: xmppSendStub
+      send: null
     }
-
     // configure webhook
     baseUrl = 'http://localhost:' + config.listener.port
     webhook = require('./../lib/webhook')(logger, config, xmpp)
@@ -33,7 +31,9 @@ describe('Webhook component', () => {
   })
 
   beforeEach('Reset XMPP stub history and request option', function () {
-    xmppSendStub.resetHistory()
+    // mock xmpp component
+    xmppSendStub = sinon.stub().resolves()
+    xmpp.send = xmppSendStub
     options = {
       method: 'POST',
       url: baseUrl + config.listener.path + '/',
@@ -144,6 +144,28 @@ describe('Webhook component', () => {
     })
   })
 
+  describe('POST valid webhook (send message) with XMPP error', () => {
+    it('Should return 200 and send XMPP message', (done) => {
+      xmppSendStub = sinon.stub().rejects()
+      xmpp.send = xmppSendStub
+      options.json = {
+        destination: 'destination',
+        message: 'This is a message'
+      }
+      options.url += 'w1'
+      request(options, (error, response, body) => {
+        response.statusCode.should.equal(500)
+        sinon.assert.calledOnce(xmppSendStub)
+        const args = xmppSendStub.args[0]
+        args.should.have.length(3)
+        args[0].should.equal(options.json.destination)
+        args[1].should.equal(options.json.message)
+        args[2].should.equal('chat')
+        done()
+      })
+    })
+  })
+
   describe('POST valid webhook (send template)', () => {
     it('Should return 200 and send XMPP message', (done) => {
       options.json = {
@@ -160,6 +182,35 @@ describe('Webhook component', () => {
       options.url += 'grafana'
       request(options, (error, response, body) => {
         response.statusCode.should.equal(200)
+        sinon.assert.calledOnce(xmppSendStub)
+        const args = xmppSendStub.args[0]
+        args.should.have.length(3)
+        args[0].should.equal('grafana@conference.domain-xmpp.ltd')
+        args[1].should.equal('This is a title\r\nThis is a message\r\nmetric: value\r\nhttps://domain.ltd:port/path/image')
+        args[2].should.equal('groupchat')
+        done()
+      })
+    })
+  })
+
+  describe('POST valid webhook (send template) with XMPP error', () => {
+    it('Should return 200 and send XMPP message', (done) => {
+      xmppSendStub = sinon.stub().rejects()
+      xmpp.send = xmppSendStub
+      options.json = {
+        title: 'This is a title',
+        message: 'This is a message',
+        evalMatches: [
+          {
+            metric: 'metric',
+            value: 'value'
+          }
+        ],
+        imageUrl: 'https://domain.ltd:port/path/image'
+      }
+      options.url += 'grafana'
+      request(options, (error, response, body) => {
+        response.statusCode.should.equal(500)
         sinon.assert.calledOnce(xmppSendStub)
         const args = xmppSendStub.args[0]
         args.should.have.length(3)
