@@ -86,7 +86,7 @@
     ],
     "outgoingWebhooks": [
         {
-            "code": "w1",
+            "code": "basic-json-reply",
             "url": "https://domain.ltd:port/path/resource",
             "strictSSL": true,
             "contentType": "application/json",
@@ -96,7 +96,7 @@
             "bearer": null
         },
         {
-            "code": "w2",
+            "code": "bearer-form",
             "url": "https://domain.ltd:port/path/resource",
             "strictSSL": true,
             "contentType": "application/x-www-form-urlencoded",
@@ -106,7 +106,7 @@
             "bearer": "abcdefgh"
         },
         {
-            "code": "w3",
+            "code": "protected",
             "url": "https://domain.ltd:port/path/protectedresource",
             "strictSSL": true,
             "contentType": "application/json",
@@ -116,8 +116,8 @@
             "bearer": null
         },
         {
-            "code": "w4",
-            "url": "https://domain.ltd:port/path/errorresource",
+            "code": "request-error",
+            "url": "https://domain.ltd:port/path/request-error",
             "strictSSL": true,
             "contentType": "application/json",
             "authMethod": null,
