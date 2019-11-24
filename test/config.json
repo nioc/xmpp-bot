@@ -46,6 +46,7 @@
         "username": "bot@domain-xmpp.ltd",
         "password": "botPass",
         "resource": "botservice",
+        "errorReply": "Oops, something went wrong :(",
         "rooms": [
             {
                 "id": "roomname@conference.domain-xmpp.ltd",
