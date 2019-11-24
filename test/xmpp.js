@@ -100,6 +100,36 @@ describe('XMPP component', () => {
     })
   })
 
+  describe('Connect to XMPP server but fail to start', () => {
+    let xmppStartStub
+    beforeEach(async () => {
+      xmppStartStub = sinon.stub().rejects(new Error('Stubed error message'))
+      mock('@xmpp/client', {
+        client: () => {
+          this.start = xmppStartStub
+          this.stop = xmppCloseStub
+          this.send = xmppSendStub
+          this.on = (eventName, callback) => {
+            simpleXmppEvents.on(eventName, callback)
+          }
+          return this
+        },
+        xml: require('@xmpp/xml'),
+        jid: require('@xmpp/jid')
+      })
+      xmpp = require('./../lib/xmpp')(logger, config)
+    })
+    it('Should log error', (done) => {
+      require('fs').readFile(config.logger.file.path + config.logger.file.filename, 'utf8', (err, data) => {
+        if (err) {
+          throw err
+        }
+        data.should.match(new RegExp('XMPP client encountered following error at connection: Stubed error message' + '\n$'))
+        done()
+      })
+    })
+  })
+
   describe('Bot receive a presence stanza from someone', () => {
     beforeEach(async () => {
       await simpleXmppEvents.emit('stanza', xml(
