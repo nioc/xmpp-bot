@@ -16,6 +16,8 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 
 ## Installation
 
+An [Ansible role](/docs/ansible/xmpp-bot/README.md) is provided, but you can also use following commands: 
+
 -   Install [Node.js](https://nodejs.org/):
     ```shell
     curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -126,6 +128,11 @@ User &rlarr; XMPP client &rlarr; XMPP Server &rlarr; **XMPP Bot** &rlarr; REST A
 -    `room` is the XMPP hook key: an incoming groupchat (or chat) from this room (or this user) will trigger corresponding `action`
 -    `action` among enumeration:
      -    `outgoing_webhook` will execute a request to corresponding webhook with `args` as webhook code
+
+## FAQ
+
+-   *XMPP server is using a self signed certificate, how can i run service?*
+    You can allow insecure TLS connections and HTTPS requests by adding `Environment=NODE_TLS_REJECT_UNAUTHORIZED=0` in /usr/lib/systemd/system/xmpp-bot.service.
 
 ## Credits
 

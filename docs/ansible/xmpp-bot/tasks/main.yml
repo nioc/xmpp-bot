@@ -1,0 +1,85 @@
+---
+- name: Install and configure NodeJS LTS
+  include_tasks: nodejs.yml
+  when: xmppbot_install_nodejs
+
+- name: Install/update npm package globally
+  become: yes
+  npm:
+    name: npm
+    state: latest
+    global: yes
+
+- name: Get XMPP bot code from Git repo
+  become: yes
+  git:
+    repo: '{{xmppbot_git_url}}'
+    version: '{{xmppbot_version}}'
+    dest: '{{xmppbot_dir}}/'
+    force: yes
+
+- name: Install XMPP bot based on package.json
+  become: yes
+  npm:
+    path: '{{xmppbot_dir}}'
+    production: yes
+
+- name: Add XMPP bot user "{{xmppbot_user}}"
+  become: yes
+  user:
+    name: '{{xmppbot_user}}'
+    system: yes
+    shell: /bin/false
+
+- name: Set configuration file
+  become: yes
+  template:
+    src: config.json.j2
+    dest: '{{xmppbot_dir}}/lib/config/config.json'
+
+- name: Set permissions
+  become: yes
+  file:
+    path: '{{xmppbot_dir}}/'
+    state: directory
+    owner: '{{xmppbot_user}}'
+    group: '{{xmppbot_user}}'
+    recurse: yes
+
+- name: Creates XMPP bot logs folder
+  become: yes
+  file:
+    path: '{{xmppbot_log_dir}}'
+    state: directory
+    owner: '{{xmppbot_user}}'
+    group: '{{xmppbot_user}}'
+
+- name: Create XMPP bot service
+  become: yes
+  copy:
+    src: '{{xmppbot_dir}}/docs/xmpp-bot.service'
+    dest: /usr/lib/systemd/system/xmpp-bot.service
+    remote_src: yes
+
+- name: Tune service (dir and running user)
+  become: yes
+  lineinfile:
+    path: /usr/lib/systemd/system/xmpp-bot.service
+    regexp: '{{item.regexp}}'
+    line: '{{item.line}}'
+    state: present
+  with_items:
+  - regexp: '^User='
+    line: 'User={{xmppbot_user}}'
+  - regexp: '^WorkingDirectory='
+    line: 'WorkingDirectory={{xmppbot_dir}}'
+  - regexp: '^ExecStart='
+    line: 'ExecStart=/usr/bin/node {{xmppbot_dir}}/lib/server.js'
+
+- name: Enable XMPP bot service
+  become: yes
+  systemd:
+    name: xmpp-bot
+    enabled: yes
+    state: started
+    daemon_reload: yes

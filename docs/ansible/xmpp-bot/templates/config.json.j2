@@ -1,0 +1,99 @@
+{
+    "logger": {
+        "level": "debug",
+        "file": {
+            "active": false,
+            "pattern": "%d %p %m%n",
+            "path": "{{xmppbot_log_dir}}/",
+            "filename": "xmpp-bot.log"
+        },
+        "console": {
+            "active": false,
+            "coloured": true
+        },
+        "stdout": {
+            "active": true,
+            "pattern": "%p %m"
+        }
+    },
+    "webhooksListener": {
+        "path": "{{xmppbot_webhook_path}}",
+        "port": {{xmppbot_webhook_port}},
+        "ssl": {
+            "port": {{xmppbot_webhook_port_ssl}},
+            "certPath": "{{xmppbot_webhook_certpath}}",
+            "keyPath": "{{xmppbot_webhook_keypath}}"
+        },
+        "users": [{% for login, passwd in xmppbot_webhook_users.iteritems() %}
+
+            {
+                "login": "{{login}}",
+                "password": "{{passwd}}"
+            }{% if not loop.last %},{% endif %}{% endfor %}
+
+        ],
+        "accessLog": {
+            "active": true,
+            "path": "{{xmppbot_log_dir}}/",
+            "filename": "webhook.log"
+        }
+    },
+    "xmppServer": {
+        "service": "{{xmppbot_xmpp_server.service}}",
+        "domain": "{{xmppbot_xmpp_server.domain}}",
+        "username": "{{xmppbot_xmpp_server.username}}",
+        "password": "{{xmppbot_xmpp_server.password}}",
+        "resource": "{{xmppbot_xmpp_resource}}",
+        "errorReply": "{{xmppbot_xmpp_error_reply}}",
+        "rooms": [{% for room in xmppbot_xmpp_server.rooms %}
+
+            {
+                "id": "{{room.id}}",
+                "password": {{room.password}}
+            }{% if not loop.last %},{% endif %}{% endfor %}
+
+        ]
+    },
+    "incomingWebhooks": [{% for webhook in xmppbot_incoming_webhooks %}
+
+        {
+            "path": "{{webhook.path}}",
+            {% if webhook.args is defined -%}
+            "args": { {% for key, value in webhook.args.iteritems() %}
+
+                "{{key}}": "{{value}}"{% if not loop.last %},{% endif %}{% endfor %}
+
+            },
+            {% endif -%}
+            {% if webhook.template is defined -%}
+             "template": {{webhook.template|tojson}},
+            {% endif -%}
+            "action": "{{webhook.action}}"
+        }{% if not loop.last %},{% endif %}{% endfor %}
+
+    ],
+    "xmppHooks": [{% for xmpp_hook in xmppbot_xmpp_hooks %}
+
+        {
+            "room": "{{xmpp_hook.room}}",
+            "action": "{{xmpp_hook.action}}",
+            "args": {{xmpp_hook.args}}
+        }{% if not loop.last %},{% endif %}{% endfor %}
+
+    ],
+    "outgoingWebhooks": [{% for outgoing_webhook in xmppbot_outgoing_webhooks %}
+
+        {
+            "code": "{{outgoing_webhook.code}}",
+            "url": "{{outgoing_webhook.url}}",
+            "timeout": {{outgoing_webhook.timeout}},
+            "strictSSL": {{outgoing_webhook.strictSSL}},
+            "contentType": "{{outgoing_webhook.contentType}}",
+            "authMethod": "{{outgoing_webhook.authMethod}}",
+            "user": "{{outgoing_webhook.user}}",
+            "password": "{{outgoing_webhook.password}}",
+            "bearer": {{outgoing_webhook.bearer}}
+        }{% if not loop.last %},{% endif %}{% endfor %}
+
+    ]
+}

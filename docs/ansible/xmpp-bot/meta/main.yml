@@ -1,0 +1,9 @@
+galaxy_info:
+  author: Nioc
+  description: Install XMPP bot
+  issue_tracker_url: https://github.com/nioc/xmpp-bot/issues
+  license: license (AGPL-3.0-or-later)
+  min_ansible_version: 2.9
+  galaxy_tags: []
+
+dependencies: []

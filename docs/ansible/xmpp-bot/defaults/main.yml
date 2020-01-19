@@ -1,0 +1,57 @@
+---
+# installation:
+xmppbot_install_nodejs: true
+nodejs_repo: node_12.x
+xmppbot_version: HEAD
+xmppbot_git_url: https://github.com/nioc/xmpp-bot.git
+# global config:
+xmppbot_dir: /usr/local/bin/xmpp-bot
+xmppbot_user: xmpp-bot
+xmppbot_log_dir: /var/log/xmpp-bot
+# webhooks config:
+xmppbot_webhook_path: '/webhooks'
+xmppbot_webhook_port: '8000'
+xmppbot_webhook_port_ssl: '8001'
+xmppbot_webhook_certpath: /etc/ssl/certs/ssl-cert-snakeoil.pem
+xmppbot_webhook_keypath: /etc/ssl/private/ssl-cert-snakeoil.key
+xmppbot_webhook_users:
+  login1: 1pass
+  login2: 2pass
+xmppbot_incoming_webhooks:
+- path: /webhooks/w1
+  action: send_xmpp_message
+- path: /webhooks/grafana
+  action: send_xmpp_template
+  args: 
+    destination: "grafana@conference.domain-xmpp.ltd"
+    type: "groupchat"
+  template: "${title}\r\n${message}\r\n${evalMatches[].metric}: ${evalMatches[].value}\r\n${imageUrl}"
+# XMPP server config:
+xmppbot_xmpp_server:
+  service: xmpps://domain-xmpp.ltd:5223
+  domain: domain-xmpp.ltd
+  username: bot@domain-xmpp.ltd
+  password: botPass
+  rooms:
+  - id: roomname@conference.domain-xmpp.ltd
+    password: 'null'
+xmppbot_xmpp_hooks:
+- room: bot@domain-xmpp.ltd
+  action: outgoing_webhook
+  args: '["w1"]'
+- room: roomname@conference.domain-xmpp.ltd
+  action: outgoing_webhook
+  args: '["w1"]'
+xmppbot_xmpp_error_reply: Oops, something went wrong :(
+xmppbot_xmpp_resource: botservice
+# outgoing webhooks config:
+xmppbot_outgoing_webhooks:
+- code: 'w1'
+  url: 'https://domain.ltd:port/path/resource?parameter1=value1'
+  timeout: '500'
+  strictSSL: 'true'
+  contentType: 'application/json'
+  authMethod: 'basic'
+  user: 'user3'
+  password: '3pass'
+  bearer: 'null'

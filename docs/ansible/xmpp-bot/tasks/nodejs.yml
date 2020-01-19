@@ -1,0 +1,23 @@
+---
+- name: Add NodeSource signing key
+  become: yes
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: Add NodeSource APT repository
+  become: yes
+  apt_repository:
+    repo: deb https://deb.nodesource.com/{{nodejs_repo}} {{distro}} main
+    filename: nodesource
+    update_cache: yes
+    state: present
+  vars:
+  - distro: "{{ ansible_distribution_release | default('buster') }}"
+
+- name: Install Node.js packages
+  become: yes
+  apt:
+    name: nodejs
+    state: present
+    cache_valid_time: 3600
