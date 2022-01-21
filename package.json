@@ -27,7 +27,7 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "jmespath": "^0.15.0",
-    "log4js": "^4.5.1",
+    "log4js": "^6.4.0",
     "morgan": "^1.9.1",
     "node-cleanup": "^2.1.2",
     "request": "^2.88.0"
