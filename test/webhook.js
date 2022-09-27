@@ -1,5 +1,6 @@
 'use strict'
-/* eslint-disable handle-callback-err */
+/* eslint-disable n/handle-callback-err */
+/* eslint-disable prefer-regex-literals */
 process.env.NODE_ENV = 'production'
 
 require('chai').should()

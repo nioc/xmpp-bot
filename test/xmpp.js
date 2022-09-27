@@ -74,12 +74,12 @@ describe('XMPP component', () => {
     it('Should connect to XMPP server and join rooms when application start', (done) => {
       sinon.assert.called(xmppSendStub)
       // 1 "send" call for presence and n "send" calls for joining rooms
-      let roomsLength = config.xmpp.rooms.length
+      const roomsLength = config.xmpp.rooms.length
       sinon.assert.callCount(xmppSendStub, roomsLength + 1)
       for (let index = 1; index < roomsLength + 1; index++) {
         const args = xmppSendStub.args[index]
         args.should.have.length(1)
-        let occupantJid = config.xmpp.rooms[index - 1].id + '/' + 'bot'
+        const occupantJid = config.xmpp.rooms[index - 1].id + '/' + 'bot'
         const stanza = xml(
           'presence', {
             to: occupantJid
@@ -353,7 +353,7 @@ describe('XMPP component', () => {
     })
     it('Should call xmpp/client.send() with valid stanza', (done) => {
       sinon.assert.calledOnce(xmppSendStub)
-      let stanza = xml(
+      const stanza = xml(
         'message', {
           to: 'someone@domain-xmpp.ltd',
           type: 'chat'
