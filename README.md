@@ -2,7 +2,7 @@
 
 [![license: AGPLv3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![GitHub release](https://img.shields.io/github/release/nioc/xmpp-bot.svg)](https://github.com/nioc/xmpp-bot/releases/latest)
-[![Build Status](https://travis-ci.org/nioc/xmpp-bot.svg?branch=master)](https://travis-ci.org/nioc/xmpp-bot)
+[![Build Status](https://api.travis-ci.com/nioc/xmpp-bot.svg?branch=master)](https://app.travis-ci.com/github/nioc/xmpp-bot)
 [![Coverage Status](https://coveralls.io/repos/github/nioc/xmpp-bot/badge.svg?branch=master)](https://coveralls.io/github/nioc/xmpp-bot?branch=master)
 
 XMPP Bot is a tiny little bot making the link between XMPP conversations and webhooks.
